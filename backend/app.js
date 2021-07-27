@@ -2,23 +2,26 @@ const express = require("express");
 
 const app = express();
 
-app.use((req, res, next) => {
-  console.log("la requête a bien été reçue");
-  next();
-});
-
-app.use((rep, res, next) => {
-  res.status(201);
-  next();
-});
-
-app.use((req, res, next) => {
-  res.json({ message: "Votre requête a bien été reçue" });
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("la réponse a bien été envoyée");
+app.use("/api/sauces", (req, res, next) => {
+  const sauces = [
+    {
+      _id: "sauceBleue",
+      title: "Sauce Bleue",
+      description: "Couleur gout et force de la sauce",
+      imageUrl: "",
+      price: 700,
+      userId: "qsomihvqios",
+    },
+    {
+      _id: "sauceRouge",
+      title: "Sauce Bleue",
+      description: "Couleur rouge  gout relevé et force extrême de la sauce",
+      imageUrl: "",
+      price: 800,
+      userId: "qsomihvqios",
+    },
+  ];
+  res.status(200).json(sauces);
 });
 
 module.exports = app;
