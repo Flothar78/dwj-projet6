@@ -2,26 +2,24 @@ const express = require("express");
 
 const app = express();
 
-app.use("/api/sauces", (req, res, next) => {
-  const sauces = [
-    {
-      _id: "sauceBleue",
-      title: "Sauce Bleue",
-      description: "Couleur gout et force de la sauce",
-      imageUrl: "",
-      price: 700,
-      userId: "qsomihvqios",
-    },
-    {
-      _id: "sauceRouge",
-      title: "Sauce Bleue",
-      description: "Couleur rouge  gout relevé et force extrême de la sauce",
-      imageUrl: "",
-      price: 800,
-      userId: "qsomihvqios",
-    },
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
+
+app.use("/api/auth/signup", (req, res, next) => {
+  const inscription = [
+    { email: "jeanedgar@gonit.org", password: "ABCDEFRTGH" },
   ];
-  res.status(200).json(sauces);
+  res.status(200).json(inscription);
 });
 
 module.exports = app;
