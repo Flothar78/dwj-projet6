@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const User = require("./models/user.js");
+const Sauce = require("./models/sauce.js");
 const app = express();
 
 mongoose
@@ -32,13 +33,17 @@ app.post("/api/auth/signup", (req, res, next) => {
   delete req.body._id;
   const user = new User({
     userId: "",
-    email: req.body.email,
-    password: req.body.password,
+    email: "",
+    password: "",
   });
   user
     .save()
-    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-    .catch((error) => res.status(400).json({ error }));
+    .then(() => {
+      res.status(201).json({ message: "Objet enregistré !" });
+    })
+    .catch((error) => {
+      res.status(400).json({ error: "error" });
+    });
   next();
 });
 
@@ -59,7 +64,7 @@ app.post("/api/sauces", (req, res, next) => {
   sauce
     .save()
     .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(401).json({ error }));
   next();
 });
 
