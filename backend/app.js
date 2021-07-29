@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
+const User = require("./models/user.js");
 const app = express();
 
 mongoose
@@ -14,18 +15,30 @@ mongoose
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
   next();
 });
 
 app.use(bodyParser.json());
 
 app.post("/api/auth/signup", (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: "Objet créé !",
+  delete req.body._id;
+  const user = new User({
+    userId: "",
+    email: req.body.email,
+    password: req.body.password,
   });
+  user
+    .save()
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
   next();
 });
 
@@ -39,24 +52,21 @@ app.post("/api/auth/login", (req, res, next) => {
   next();
 });
 
-app.use("/api/sauces", (rep, res, next) => {
-  const sauces = [
-    {
-      userId: "12a31b2de31153123a318861",
-      name: "Sauce Bleue",
-    },
-    {
-      userId: "12a31b2de312f23fd23a318861",
-      name: "Sauce Rouge",
-    },
-    {
-      userId: "12a31b2de312f2d123a318861",
-      name: "Sauce Jaune",
-    },
-    { userId: "12a31b2de312ac48123a318861", name: "Sauce Verte" },
-  ];
-  res.status(202).json(sauces);
+app.use(bodyParser.json());
+
+app.post("/api/sauces", (req, res, next) => {
+  const sauce = new Sauce({});
+  sauce
+    .save()
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
   next();
+});
+
+app.use("/api/sauces", (req, res, next) => {
+  Sauce.find()
+    .then((sauces) => res.status(200).json(sauces))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 module.exports = app;
