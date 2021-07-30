@@ -57,18 +57,18 @@ app.post("/api/auth/login", (req, res, next) => {
 
 app.post("/api/sauces", (req, res, next) => {
   console.log(req.body.name);
+
+  const sauceObject = JSON.parse(req.body.sauce);
+
+  delete sauceObject._id;
+
   const sauce = new Sauce({
-    userId: "userId",
-    name: "" + req.body.name + "",
-    manufacturer: "" + req.body.manufacturer + "",
-    description: "description",
-    mainPepper: "mainPepper",
+    ...sauceObject,
     imageUrl: "imageUrl",
-    heat: 5,
     likes: 0,
     dislikes: 0,
-    usersLiked: "usersLiked",
-    usersDisliked: "usersDisliked",
+    usersLiked: [],
+    usersDisliked: [],
   });
   sauce
     .save()
