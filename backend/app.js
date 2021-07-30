@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const mongoose = require("mongoose");
 
 const User = require("./models/user.js");
@@ -14,6 +15,8 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
+app.use(bodyParser.json());
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -27,10 +30,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
-
 app.post("/api/auth/signup", (req, res, next) => {
-  delete req.body._id;
   const user = new User({
     userId: "",
     email: "",
@@ -47,8 +47,6 @@ app.post("/api/auth/signup", (req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
-
 app.post("/api/auth/login", (req, res, next) => {
   console.log(req.body);
   res.status(201).json({
@@ -57,20 +55,31 @@ app.post("/api/auth/login", (req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
-
 app.post("/api/sauces", (req, res, next) => {
-  const sauce = new Sauce({});
+  console.log(req.body.name);
+  const sauce = new Sauce({
+    userId: "userId",
+    name: "" + req.body.name + "",
+    manufacturer: "" + req.body.manufacturer + "",
+    description: "description",
+    mainPepper: "mainPepper",
+    imageUrl: "imageUrl",
+    heat: 5,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: "usersLiked",
+    usersDisliked: "usersDisliked",
+  });
   sauce
     .save()
-    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-    .catch((error) => res.status(401).json({ error }));
+    .then(() => res.status(201).json(req.body))
+    .catch((error) => res.status(402).json({ error }));
   next();
 });
 
 app.use("/api/sauces", (req, res, next) => {
   Sauce.find()
-    .then((sauces) => res.status(200).json(sauces))
+    .then((sauces) => res.status(207).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 });
 
