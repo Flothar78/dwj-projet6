@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
 const mongoose = require("mongoose");
 
 const User = require("./models/user.js");
@@ -15,6 +14,8 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -56,15 +57,15 @@ app.post("/api/auth/login", (req, res, next) => {
 });
 
 app.post("/api/sauces", (req, res, next) => {
-  console.log(req.body.name);
-
-  const sauceObject = JSON.parse(req.body.sauce);
-
-  delete sauceObject._id;
-
+  console.log(req.body.sauce);
   const sauce = new Sauce({
-    ...sauceObject,
+    userId: "userId",
+    name: "" + req.body.name + "",
+    manufacturer: "manufacturer",
+    description: "description",
+    mainPepper: "mainPepper",
     imageUrl: "imageUrl",
+    heat: 5,
     likes: 0,
     dislikes: 0,
     usersLiked: [],
