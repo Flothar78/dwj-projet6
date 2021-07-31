@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const User = require("./models/user.js");
@@ -29,7 +28,6 @@ app.use((req, res, next) => {
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(bodyParser.json());
 
 app.post("/api/auth/signup", (req, res, next) => {
   const user = new User({
