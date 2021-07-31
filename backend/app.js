@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const multer = require("./middleware/multer");
 
-const User = require("./models/user.js");
-const Sauce = require("./models/sauce.js");
+const User = require("./models/user");
+const Sauce = require("./models/sauce");
 const app = express();
 
 mongoose
@@ -54,20 +55,15 @@ app.post("/api/auth/login", (req, res, next) => {
   next();
 });
 
-app.post("/api/sauces", (req, res, next) => {
-  console.log(req.body.sauce);
+app.post("/api/sauces", multer, (req, res, next) => {
+  console.log(req.body);
+  let test = JSON.parse(req.body.sauce);
   const sauce = new Sauce({
-    userId: "userId",
-    name: "" + req.body.name + "",
-    manufacturer: "manufacturer",
-    description: "description",
-    mainPepper: "mainPepper",
-    imageUrl: "imageUrl",
-    heat: 5,
-    likes: 0,
-    dislikes: 0,
-    usersLiked: [],
-    usersDisliked: [],
+    userId: "toto",
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`,
+    ...test,
   });
   sauce
     .save()
