@@ -31,19 +31,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post("/api/auth/signup", (req, res, next) => {
-  const user = new User({
-    userId: "",
-    email: "",
-    password: "",
+  console.log(req.body);
+  res.status(201).json({
+    message: "Login OK",
   });
-  user
-    .save()
-    .then(() => {
-      res.status(201).json({ message: "Objet enregistré !" });
-    })
-    .catch((error) => {
-      res.status(400).json({ error: "error" });
-    });
   next();
 });
 
@@ -57,19 +48,36 @@ app.post("/api/auth/login", (req, res, next) => {
 
 app.post("/api/sauces", multer, (req, res, next) => {
   console.log(req.body);
-  let test = JSON.parse(req.body.sauce);
+  let content = JSON.parse(req.body.sauce);
   const sauce = new Sauce({
     userId: "toto",
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
-    ...test,
+    ...content,
   });
   sauce
     .save()
     .then(() => res.status(201).json(req.body))
     .catch((error) => res.status(402).json({ error }));
-  next();
+});
+
+app.put("/api/sauces/:id", (req, res, next) => {
+  Sauce.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+    .then(() => res.status(200).json({ message: "Objet modifié !" }))
+    .catch((error) => res.status(400).json({ error }));
+});
+
+app.delete("/api/stuff/:id", (req, res, next) => {
+  Thing.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: "Objet supprimé !" }))
+    .catch((error) => res.status(400).json({ error }));
+});
+
+app.get("/api/sauces/:id", (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => res.status(200).json(sauce))
+    .catch((error) => res.status(404).json({ error }));
 });
 
 app.use("/api/sauces", (req, res, next) => {
