@@ -1,15 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const multer = require("./middleware/multer");
+const path = require("path");
 
-const User = require("./models/user");
-const Sauce = require("./models/sauce");
+const cors = require("cors");
 const app = express();
+
+const userRoutes = require("./routes/user");
 
 mongoose
   .connect(
     "mongodb+srv://Flothar78:Tortrock124!@cluster0.korbb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
@@ -27,63 +28,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.post("/api/auth/signup", (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: "Login OK",
-  });
-  next();
-});
+app.use(cors());
 
-app.post("/api/auth/login", (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: "Login OK",
-  });
-  next();
-});
+app.use("/images", express.static(path.join(__dirname, "images")));
 
-app.post("/api/sauces", multer, (req, res, next) => {
-  console.log(req.body);
-  let content = JSON.parse(req.body.sauce);
-  const sauce = new Sauce({
-    userId: "toto",
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
-    ...content,
-  });
-  sauce
-    .save()
-    .then(() => res.status(201).json(req.body))
-    .catch((error) => res.status(402).json({ error }));
-});
-
-app.put("/api/sauces/:id", (req, res, next) => {
-  Sauce.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-    .then(() => res.status(200).json({ message: "Objet modifié !" }))
-    .catch((error) => res.status(400).json({ error }));
-});
-
-app.delete("/api/stuff/:id", (req, res, next) => {
-  Thing.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: "Objet supprimé !" }))
-    .catch((error) => res.status(400).json({ error }));
-});
-
-app.get("/api/sauces/:id", (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json(sauce))
-    .catch((error) => res.status(404).json({ error }));
-});
-
-app.use("/api/sauces", (req, res, next) => {
-  Sauce.find()
-    .then((sauces) => res.status(207).json(sauces))
-    .catch((error) => res.status(400).json({ error }));
-});
+app.use("/api/auth", userRoutes);
 
 module.exports = app;
