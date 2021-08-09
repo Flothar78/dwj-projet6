@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-const multer = require("./middleware/multer-config.js");
 
 const cors = require("cors");
 const app = express();
