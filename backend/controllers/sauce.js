@@ -1,10 +1,11 @@
 const Sauce = require("../models/sauce");
 const fs = require("fs");
+const db = require("mongoose");
 
 exports.createSauce = (req, res, next) => {
   console.log(req.file.filename);
-
   const sauceObject = JSON.parse(req.body.sauce);
+  delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
@@ -57,4 +58,19 @@ exports.getAllSauce = (req, res, next) => {
   Sauce.find()
     .then((sauces) => res.status(207).json(sauces))
     .catch((error) => res.status(400).json({ error }));
+};
+
+exports.likeSauce = (req, res, next) => {
+  const like = req.body.like;
+  const userId = req.body.userId;
+  const sauceId = req.body.sauceId;
+
+  if (like === 0) {
+    Sauce.findOne({ _id: req.params.id })
+      .then({
+        $inc: { "Sauce.likes": 1 },
+      })
+      .catch((error) => res.status(403).json({ error }));
+  }
+  console.log("test");
 };
