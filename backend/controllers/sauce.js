@@ -1,6 +1,5 @@
 const Sauce = require("../models/sauce");
 const fs = require("fs");
-const db = require("mongoose");
 
 exports.createSauce = (req, res, next) => {
   console.log(req.file.filename);
@@ -61,16 +60,18 @@ exports.getAllSauce = (req, res, next) => {
 };
 
 exports.likeSauce = (req, res, next) => {
+  const sauceId = req.params.id;
   const like = req.body.like;
   const userId = req.body.userId;
-  const sauceId = req.body.sauceId;
 
-  if (like === 0) {
-    Sauce.findOne({ _id: req.params.id })
-      .then({
-        $inc: { "Sauce.likes": 1 },
-      })
-      .catch((error) => res.status(403).json({ error }));
+  console.log(req.params.id);
+  console.log(req.body.like);
+  console.log(req.body.userId);
+  switch (like) {
+    case 0:
+      Sauce.findOne({ _id: sauceId })
+        .then(Sauce.updateOne({ $inc: { likes: 1 } }))
+        .catch((error) => res.status(403).json({ error }));
+      break;
   }
-  console.log("test");
 };
