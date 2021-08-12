@@ -58,6 +58,7 @@ exports.getAllSauce = (req, res, next) => {
     .then((sauces) => res.status(207).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
+
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const like = req.body.like;
@@ -68,16 +69,68 @@ exports.likeSauce = (req, res, next) => {
   console.log(userId);
 
   Sauce.findOne({ _id: sauceId })
-    .then(() => {
-      switch (like) {
-        case 0:
-          Sauce.updateOne({ $inc: { likes: 1 } });
+    .then((sauce) => {
+      let usersLiked = sauce.usersLiked;
+      let usersDisliked = sauce.usersDisliked;
 
-          break;
+      let user = userId; //Elément à rechercher
+      switch (like) {
         case 1:
-          Sauce.updateOne({ $inc: { likes: 0 } });
+          for (let i = 0; i < usersLiked.length; i++) {
+            if (user === usersLiked[i]) {
+              res.status(200).json({ message: "Utilisateur déjà liké" });
+            }
+          }
+          sauce.likes += 1;
+          sauce.usersLiked.push(user);
+
+          for (let i = 0; i < usersDisliked.length; i++) {
+            if (user === usersDisliked[i]) {
+              sauce.dislike -= 1;
+              sauce.usersDisliked.splice([i], 1);
+            }
+          }
+          sauce.save();
+          res.status(200).json({});
+          break;
+        case -1:
+          for (let i = 0; i < usersDisliked.length; i++) {
+            if (user === usersDisliked[i]) {
+              res.status(200).json({ message: "Utilisateur déjà disliké" });
+            }
+          }
+          sauce.dislikes += 1;
+          sauce.usersDisliked.push(user);
+
+          for (let i = 0; i < usersLiked.length; i++) {
+            if (user === usersLiked[i]) {
+              sauce.likes -= 1;
+              sauce.usersLiked.splice([i], 1);
+            }
+          }
+          sauce.save();
+          res.status(200).json({});
+          break;
+        case 0:
+          for (let i = 0; i < usersDisliked.length; i++) {
+            if (user === usersDisliked[i]) {
+              sauce.dislikes -= 1;
+              sauce.usersDisliked.splice([i], 1);
+              sauce.save();
+              res.status(200).json({ message: "Utilisateur déjà disliké" });
+            }
+          }
+
+          for (let i = 0; i < usersLiked.length; i++) {
+            if (user === usersLiked[i]) {
+              sauce.likes -= 1;
+              sauce.usersLiked.splice([i], 1);
+              sauce.save();
+              res.status(200).json({});
+            }
+          }
           break;
       }
     })
-    .catch((error) => res.status(403).json({ error }));
+    .catch((error) => res.status(407).json({ error }));
 };
