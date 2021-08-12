@@ -58,20 +58,26 @@ exports.getAllSauce = (req, res, next) => {
     .then((sauces) => res.status(207).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
-
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const like = req.body.like;
   const userId = req.body.userId;
 
-  console.log(req.params.id);
-  console.log(req.body.like);
-  console.log(req.body.userId);
-  switch (like) {
-    case 0:
-      Sauce.findOne({ _id: sauceId })
-        .then(Sauce.updateOne({ $inc: { likes: 1 } }))
-        .catch((error) => res.status(403).json({ error }));
-      break;
-  }
+  console.log(sauceId);
+  console.log(like);
+  console.log(userId);
+
+  Sauce.findOne({ _id: sauceId })
+    .then(() => {
+      switch (like) {
+        case 0:
+          Sauce.updateOne({ $inc: { likes: 1 } });
+
+          break;
+        case 1:
+          Sauce.updateOne({ $inc: { likes: 0 } });
+          break;
+      }
+    })
+    .catch((error) => res.status(403).json({ error }));
 };
