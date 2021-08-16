@@ -3,14 +3,14 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 
-const MY_PORT = process.env.PORT;
+const HOST = process.env.HOST;
 const MY_APP_SECRET = process.env.APP_SECRET;
 
 app.get("/", (req, res) => {
   return res.send(MY_APP_SECRET);
 });
 
-app.listen(MY_PORT, () => console.log(`Server running on port ${MY_PORT}`));
+app.listen(HOST, () => console.log(`Server running on port ${HOST}`));
 
 const mongoose = require("mongoose");
 const path = require("path");
