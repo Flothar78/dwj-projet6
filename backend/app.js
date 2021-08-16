@@ -1,4 +1,4 @@
-require("dotenv").config();
+const dotenv = require("dotenv").config();
 const express = require("express");
 const app = express();
 
@@ -13,14 +13,15 @@ mongoose
   .connect(
     "mongodb+srv://Flothar78:Tortrock124!@cluster0.korbb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     {
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
-    },
-    { username: process.env.DB_USER, password: process.env.DB_PASS }
+    }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+  .catch(() => console.log("Connexion à MongoDB échouée "));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
