@@ -1,6 +1,10 @@
-const dotenv = require("dotenv").config();
 const express = require("express");
 const app = express();
+
+const dotenv = require("dotenv");
+dotenv.config();
+const user = process.env.DB_USER;
+const password = process.env.DB_PASS;
 
 const mongoose = require("mongoose");
 const path = require("path");
@@ -11,10 +15,8 @@ const sauceRoutes = require("./routes/sauce");
 
 mongoose
   .connect(
-    "mongodb+srv://Flothar78:Tortrock124!@cluster0.korbb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.korbb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
     {
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,

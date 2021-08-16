@@ -30,14 +30,8 @@ exports.modifySauce = (req, res, next) => {
     { _id: req.params.id },
     { ...sauceObject, _id: req.params.id }
   )
-    .then((sauce) => {
-      const filename = sauce.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({ _id: req.params.id });
-      });
-    })
     .then(() => res.status(200).json({ message: "Objet modifié !" }))
-    .catch((error) => res.status(409).json({ error }));
+    .catch((error) => res.status(407).json({ error }));
 };
 
 exports.deleteSauce = (req, res, next) => {
@@ -70,16 +64,12 @@ exports.likeSauce = (req, res, next) => {
   const like = req.body.like;
   const userId = req.body.userId;
 
-  console.log(sauceId);
-  console.log(like);
-  console.log(userId);
-
   Sauce.findOne({ _id: sauceId })
     .then((sauce) => {
       let usersLiked = sauce.usersLiked;
       let usersDisliked = sauce.usersDisliked;
 
-      let user = userId; //Elément à rechercher
+      let user = userId;
       switch (like) {
         case 1:
           for (let i = 0; i < usersLiked.length; i++) {
