@@ -1,10 +1,20 @@
 const express = require("express");
+const app = express();
+const dotenv = require("dotenv");
+dotenv.config();
+
+const MY_PORT = process.env.PORT;
+const MY_APP_SECRET = process.env.APP_SECRET;
+
+app.get("/", (req, res) => {
+  return res.send(MY_APP_SECRET);
+});
+
+app.listen(MY_PORT, () => console.log(`Server running on port ${MY_PORT}`));
+
 const mongoose = require("mongoose");
 const path = require("path");
-const dotenv = require("dotenv").config();
-
 const cors = require("cors");
-const app = express();
 
 const userRoutes = require("./routes/user");
 const sauceRoutes = require("./routes/sauce");
