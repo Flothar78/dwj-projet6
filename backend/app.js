@@ -1,16 +1,6 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
-const dotenv = require("dotenv");
-dotenv.config();
-
-const HOST = process.env.HOST;
-const MY_APP_SECRET = process.env.APP_SECRET;
-
-app.get("/", (req, res) => {
-  return res.send(MY_APP_SECRET);
-});
-
-app.listen(HOST, () => console.log(`Server running on port ${HOST}`));
 
 const mongoose = require("mongoose");
 const path = require("path");
@@ -22,7 +12,12 @@ const sauceRoutes = require("./routes/sauce");
 mongoose
   .connect(
     "mongodb+srv://Flothar78:Tortrock124!@cluster0.korbb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    },
+    { username: process.env.DB_USER, password: process.env.DB_PASS }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
