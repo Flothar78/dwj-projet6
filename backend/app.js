@@ -3,8 +3,6 @@ const app = express();
 
 const dotenv = require("dotenv");
 dotenv.config();
-const user = process.env.DB_USER;
-const password = process.env.DB_PASS;
 
 const mongoose = require("mongoose");
 const path = require("path");
