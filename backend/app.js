@@ -2,10 +2,13 @@
 const express = require("express");
 const app = express();
 
-////// Utilisation du middleware helmet qui implémente des contôles de sécurité dans le framework Express ////
+////// Utilisation du middleware helmet qui implémente des contrôles de sécurité dans le framework Express ////
 const helmet = require("helmet");
 
-/////// Dotenv permet d'invisiliser des données sensibles du script via les variables d'enronnement //////////
+/////// Module cors empêche les erreurs CORS par défaut //////////////////////////////////////////////////////
+const cors = require("cors");
+
+/////// Dotenv permet d'invisiliser des données sensibles du script via les variables d'environnement //////////
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -15,14 +18,11 @@ const mongoose = require("mongoose");
 /////// Module path permet aux images de trouver le bon chemin vers l'affichage //////////////////////////////
 const path = require("path");
 
-/////// Module cors empêche les erreurs CORS par défaut //////////////////////////////////////////////////////
-const cors = require("cors");
-
 /////// Appel des routes user et sauce ///////////////////////////////////////////////////////////////////////
 const userRoutes = require("./routes/user");
 const sauceRoutes = require("./routes/sauce");
 
-/////// Connection à mongoose en remplaçant les identifiants par les variables d'environment /////////////////
+/////// Connection à mongoose en remplaçant les identifiants par les variables d'environnement /////////////////
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.korbb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,

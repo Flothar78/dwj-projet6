@@ -5,7 +5,6 @@ const fs = require("fs");
 
 ////// Logique métier pour création de sauce, requête POST //////////////////
 exports.createSauce = (req, res, next) => {
-  console.log(req.file.filename);
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
   const sauce = new Sauce({
@@ -66,7 +65,7 @@ exports.getAllSauce = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-////// Logique métier pour like/dislike d'une sauce précise, requête POST //////////////////
+////// Logique métier pour  uête POST //////////////////
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const like = req.body.like;
@@ -90,7 +89,7 @@ exports.likeSauce = (req, res, next) => {
           sauce.likes += 1;
           sauce.usersLiked.push(user);
 
-          /////// boucle FOR pour parcourir le array des utilisateurs ayant déjà disliké la sauce //////
+          /////// boucle FOR pour parcourir le array des utilisateurs ayant disliké la sauce //////
           for (let i = 0; i < usersDisliked.length; i++) {
             if (user === usersDisliked[i]) {
               sauce.dislike -= 1;
