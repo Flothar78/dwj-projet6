@@ -1,6 +1,9 @@
+////// Appel du schéma de l'objet sauce choisi dans models ////////////////////////
 const Sauce = require("../models/sauce");
+
 const fs = require("fs");
 
+////// Logique métier pour création de sauce, requête POST //////////////////
 exports.createSauce = (req, res, next) => {
   console.log(req.file.filename);
   const sauceObject = JSON.parse(req.body.sauce);
@@ -17,6 +20,7 @@ exports.createSauce = (req, res, next) => {
     .catch((error) => res.status(402).json({ error }));
 };
 
+////// Logique métier pour modification de sauce, requête PUT //////////////////
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file
     ? {
@@ -34,6 +38,7 @@ exports.modifySauce = (req, res, next) => {
     .catch((error) => res.status(407).json({ error }));
 };
 
+////// Logique métier pour suppression de sauce, requête DELETE //////////////////
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
@@ -47,18 +52,21 @@ exports.deleteSauce = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+////// Logique métier pour affichage d'une sauce précise, requête GET //////////////////
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
 };
 
+////// Logique métier pour affichage de toutes les sauces, requête GET //////////////////
 exports.getAllSauce = (req, res, next) => {
   Sauce.find()
     .then((sauces) => res.status(207).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
 
+////// Logique métier pour like/dislike d'une sauce précise, requête POST //////////////////
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const like = req.body.like;
@@ -70,8 +78,10 @@ exports.likeSauce = (req, res, next) => {
       let usersDisliked = sauce.usersDisliked;
 
       let user = userId;
+      /////// Switch pour donner instruction selon si sauce déjà liké/disliké ou non pas l'utiisateur ///////////////////////////
       switch (like) {
         case 1:
+          /////// boucle FOR pour parcourir le array des utilisateurs ayant déjà liké la sauce //////
           for (let i = 0; i < usersLiked.length; i++) {
             if (user === usersLiked[i]) {
               res.status(200).json({ message: "Utilisateur déjà liké" });
@@ -80,6 +90,7 @@ exports.likeSauce = (req, res, next) => {
           sauce.likes += 1;
           sauce.usersLiked.push(user);
 
+          /////// boucle FOR pour parcourir le array des utilisateurs ayant déjà disliké la sauce //////
           for (let i = 0; i < usersDisliked.length; i++) {
             if (user === usersDisliked[i]) {
               sauce.dislike -= 1;

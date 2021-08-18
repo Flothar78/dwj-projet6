@@ -1,7 +1,9 @@
+////// Appel du module jsonweb token //////////////////////////////////////////////////////////////////////
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   try {
+    /////// Récupération du token et comparaison avec l'userID du corps de la requête ////////
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;

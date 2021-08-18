@@ -1,5 +1,8 @@
+////// Utilisation de l'outil de modélisation des données Mongoose ///////
+
 const mongoose = require("mongoose");
 
+////// Schéma de l'objet sauce /////////////////////////////////////
 const sauceSchema = mongoose.Schema({
   userId: { type: String, require: true },
   name: { type: String, require: true },
@@ -14,4 +17,5 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String] },
 });
 
+////// Export du schéma sauce pour utilisation dans les controllers /////////
 module.exports = mongoose.model("Sauce", sauceSchema);

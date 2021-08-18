@@ -1,7 +1,9 @@
+/////// Protocole http pourl'ensemble de l'application ////////////////////////////////////////
 const http = require("http");
 
 const app = require("./app");
 
+/////// normalizePort s'assure que les ports utilisés seront déclarés sous forme de number //////
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
 
@@ -14,9 +16,11 @@ const normalizePort = (val) => {
   return false;
 };
 
+/////// Choix du port 3000 si aucun n'est choisi par les variables d'environnement /////////////
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
+////// Constuction des erreurs serveurs à renvoyer si la connexion ne marche pas ///////////////
 const errorHandler = (error) => {
   if (error.syscall !== "listen") {
     throw error;
@@ -38,8 +42,10 @@ const errorHandler = (error) => {
   }
 };
 
+////// Création du serveur en utilisant app.js /////////////////////////////////////////////////
 const server = http.createServer(app);
 
+////// Mise en place de adresse serveur ////////////////////////////////////////////////////////
 server.on("error", errorHandler);
 server.on("listening", () => {
   const address = server.address();
@@ -47,4 +53,5 @@ server.on("listening", () => {
   console.log("Listening on " + bind);
 });
 
+////// Serveur utilisera le port 3000 par défaut ///////////////////////////////////////////////
 server.listen(process.env.PORT || 3000);
