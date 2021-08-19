@@ -65,7 +65,7 @@ exports.getAllSauce = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-////// Logique métier pour  uête POST //////////////////
+////// Logique métier pour like , requête POST //////////////////
 exports.likeSauce = (req, res, next) => {
   const sauceId = req.params.id;
   const like = req.body.like;
