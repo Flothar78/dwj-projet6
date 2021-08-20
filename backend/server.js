@@ -1,10 +1,10 @@
 /////// Protocole http pourl'ensemble de l'application ////////////////////////////////////////
 const http = require("http");
 
-////// Serveur créé pour app.js ///////////////////////////////////////////////
+////// Serveur créé pour app.js ///////////////////////////////////////////////////////////////
 const app = require("./app");
 
-/////// normalizePort s'assure que les ports utilisés seront déclarés sous forme de number //////
+/////// normalizePort s'assure que les ports seront valides même si sous forme de string //////
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
 

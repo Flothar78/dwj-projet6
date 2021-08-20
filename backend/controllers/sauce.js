@@ -16,7 +16,7 @@ exports.createSauce = (req, res, next) => {
   sauce
     .save()
     .then(() => res.status(201).json(req.body.sauce))
-    .catch((error) => res.status(402).json({ error }));
+    .catch((error) => res.status(400).json({ error }));
 };
 
 ////// Logique métier pour modification de sauce, requête PUT //////////////////
@@ -34,7 +34,7 @@ exports.modifySauce = (req, res, next) => {
     { ...sauceObject, _id: req.params.id }
   )
     .then(() => res.status(200).json({ message: "Objet modifié !" }))
-    .catch((error) => res.status(407).json({ error }));
+    .catch((error) => res.status(400).json({ error }));
 };
 
 ////// Logique métier pour suppression de sauce, requête DELETE //////////////////
@@ -61,7 +61,7 @@ exports.getOneSauce = (req, res, next) => {
 ////// Logique métier pour affichage de toutes les sauces, requête GET //////////////////
 exports.getAllSauce = (req, res, next) => {
   Sauce.find()
-    .then((sauces) => res.status(207).json(sauces))
+    .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -83,11 +83,12 @@ exports.likeSauce = (req, res, next) => {
           /////// boucle FOR pour parcourir le array des utilisateurs ayant déjà liké la sauce //////
           for (let i = 0; i < usersLiked.length; i++) {
             if (user === usersLiked[i]) {
-              res.status(200).json({ message: "Utilisateur déjà liké" });
+              res.status(401).json({ message: "Utilisateur déjà liké" });
             }
           }
           sauce.likes += 1;
           sauce.usersLiked.push(user);
+          console.log(sauce.usersLiked);
 
           /////// boucle FOR pour parcourir le array des utilisateurs ayant disliké la sauce //////
           for (let i = 0; i < usersDisliked.length; i++) {
@@ -102,7 +103,7 @@ exports.likeSauce = (req, res, next) => {
         case -1:
           for (let i = 0; i < usersDisliked.length; i++) {
             if (user === usersDisliked[i]) {
-              res.status(200).json({ message: "Utilisateur déjà disliké" });
+              res.status(401).json({ message: "Utilisateur déjà disliké" });
             }
           }
           sauce.dislikes += 1;
@@ -123,7 +124,7 @@ exports.likeSauce = (req, res, next) => {
               sauce.dislikes -= 1;
               sauce.usersDisliked.splice([i], 1);
               sauce.save();
-              res.status(200).json({ message: "Utilisateur déjà disliké" });
+              res.status(401).json({ message: "Utilisateur déjà disliké" });
             }
           }
 
@@ -138,5 +139,5 @@ exports.likeSauce = (req, res, next) => {
           break;
       }
     })
-    .catch((error) => res.status(407).json({ error }));
+    .catch((error) => res.status(500).json({ error }));
 };
