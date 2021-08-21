@@ -83,7 +83,7 @@ exports.likeSauce = (req, res, next) => {
           /////// boucle FOR pour parcourir le array des utilisateurs ayant déjà liké la sauce //////
           for (let i = 0; i < usersLiked.length; i++) {
             if (user === usersLiked[i]) {
-              res.status(401).json({ message: "Utilisateur déjà liké" });
+              res.status(401).json({ message: "L'utilisateur a déjà liké" });
             }
           }
           sauce.likes += 1;
@@ -103,7 +103,7 @@ exports.likeSauce = (req, res, next) => {
         case -1:
           for (let i = 0; i < usersDisliked.length; i++) {
             if (user === usersDisliked[i]) {
-              res.status(401).json({ message: "Utilisateur déjà disliké" });
+              res.status(401).json({ message: "L'Utilisateur a déjà disliké" });
             }
           }
           sauce.dislikes += 1;
@@ -124,7 +124,7 @@ exports.likeSauce = (req, res, next) => {
               sauce.dislikes -= 1;
               sauce.usersDisliked.splice([i], 1);
               sauce.save();
-              res.status(401).json({ message: "Utilisateur déjà disliké" });
+              res.status(401).json({ message: "L'utilisateur a déjà disliké" });
             }
           }
 
